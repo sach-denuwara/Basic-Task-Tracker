@@ -1,4 +1,5 @@
 # Imports
+import json
 
 # Classes
 
@@ -55,7 +56,27 @@ class TaskManager:
             
         return True
 
+    def import_save(self):
+        
+        try:
+            # Attempt to open save file
+            with open("saves/user_data.json", "r", encoding='utf-8') as save_file:
 
+                # Save File Found -> Read save file data
+                self.tasks = json.load(save_file)
+        except OSError:
+            # Occurs if save file does not exist
+            with open("saves/user_data.json", 'x') as save_file:
+                json.dump({}, save_file)
+
+    def save_data(self):
+
+        try:
+            # Attempt to write to save file
+            with open("saves/user_data.json", "w", encoding="utf-8") as save_file:
+                json.dump(self.tasks, save_file)
+        except OSError:
+            print("Error Saving Data ...")
 
     def create_task(self):
 
@@ -119,8 +140,8 @@ class TaskManager:
 
         counter = 1
 
-        for name in self.tasks.keys:
-            task_string = f'[{counter}] {name}'
+        for key in self.tasks:
+            task_string = f'[{counter}] {key}'
             print_line(task_string)
             print_bar()
             counter += 1
@@ -154,7 +175,7 @@ class TaskManager:
             task_frequency = self.tasks[user_task_input]
 
             self.tasks.pop(user_task_input)
-            self.task[user_new_name_input] = task_frequency
+            self.tasks[user_new_name_input] = task_frequency
 
             print()
             print_bar()
@@ -194,8 +215,8 @@ class TaskManager:
 
         counter = 1
 
-        for name in self.tasks.keys:
-            task_string = f'[{counter}] {name}'
+        for key in self.tasks:
+            task_string = f'[{counter}] {key}'
             print_line(task_string)
             print_bar()
             counter += 1
@@ -235,11 +256,17 @@ def main():
     
     task_manager = TaskManager()
 
+    task_manager.import_save()
+
     flag = True
 
     while(flag):
 
         flag = task_manager.run()
+
+        task_manager.save_data()
+
+    
 
 if __name__ == '__main__':
     main()
