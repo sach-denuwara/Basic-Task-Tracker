@@ -23,22 +23,23 @@ class TaskManager:
 
         # Initial Print Statement
         print_bar()
-        print("| Please Choose Option                                         |")
+        print_line("Please Choose Option")
         print_bar()
         print()
         print_bar()
-        print("| [1] Display Tasks                                            |")
-        print("| [2] Add New Task                                             |")
-        print("| [3] Update Task                                              |")
-        print("| [4] Delete Task                                              |")
-        print("| [X] Exit                                                     |")
+        print_line("[1] Display Tasks")
+        print_line("[2] Add New Task")
+        print_line("[3] Update Task")
+        print_line("[4] Delete Task")
+        print_line("[X] Exit")
         print_bar()
         print()
 
         # Wait for User Input
-        user_input = input()
+        
+        user_input = get_user_input(['1', '2', '3', '4', 'X'])
 
-        if user_input == 'X':
+        if user_input.upper() == 'X':
             return False
         
         choice = int(user_input)
@@ -87,7 +88,19 @@ class TaskManager:
         print_bar()
         print()
 
-        user_name_input = input()
+        user_name_input = None
+
+        while True:
+            user_name_input = input()
+
+            if user_name_input in self.tasks.keys():
+                print()
+                print_bar()
+                print_line("Task Name Already Exists ... Please Choose Different Name")
+                print_bar()
+                print()
+            else:
+                break
 
         print()
         print_bar()
@@ -102,7 +115,7 @@ class TaskManager:
         print_bar()
         print()
 
-        user_frequency_input = input()
+        user_frequency_input = get_user_input(['1', '2', '3', '4'])
         frequency = int(user_frequency_input)
 
         if user_name_input in self.tasks:
@@ -148,7 +161,7 @@ class TaskManager:
 
         print()
 
-        user_task_input = input()
+        user_task_input = get_user_input(list(self.tasks.keys()))
 
         print()
         print_bar()
@@ -159,7 +172,7 @@ class TaskManager:
         print_bar()
         print()
 
-        user_update_input = input()
+        user_update_input = get_user_input(['1', '2'])
 
         update_choice = int(user_update_input)
 
@@ -170,12 +183,24 @@ class TaskManager:
             print_bar()
             print()
 
-            user_new_name_input = input()
+            user_name_input = None
+
+            while True:
+                user_name_input = input()
+
+                if user_name_input in self.tasks.keys():
+                    print()
+                    print_bar()
+                    print_line("Task Name Already Exists ... Please Choose Different Name")
+                    print_bar()
+                    print()
+                else:
+                    break
 
             task_frequency = self.tasks[user_task_input]
 
             self.tasks.pop(user_task_input)
-            self.tasks[user_new_name_input] = task_frequency
+            self.tasks[user_name_input] = task_frequency
 
             print()
             print_bar()
@@ -196,7 +221,7 @@ class TaskManager:
             print_bar()
             print()
 
-            user_frequency_input = input()
+            user_frequency_input = get_user_input(['1', '2', '3', '4'])
             frequency_choice = int(user_frequency_input)
 
             self.tasks[user_task_input] = frequency_choice
@@ -223,7 +248,7 @@ class TaskManager:
 
         print()
 
-        user_task_input = input()
+        user_task_input = get_user_input(list(self.tasks.keys()))
 
         self.tasks.pop(user_task_input)
 
@@ -233,7 +258,7 @@ class TaskManager:
         print_bar()
         stall()
 
-# Functions
+# Helper Functions
 
 def print_bar():
     print(64*"=")
@@ -242,13 +267,36 @@ def print_line(statement):
     prepend = "| "
     append_length = 63 - (len(statement) + len(prepend))
     append = append_length * " " + "|"
-    print(prepend, statement, append)
+    print(prepend + statement + append)
 
 def stall():
     print()
     print("Please Enter Any Key To Continue ...")
     input()
     print()
+
+def get_user_input(choices):
+
+    while True:
+
+        try:            
+            user_input = input()
+
+            if user_input.upper() in (choice.upper() for choice in choices):
+                return user_input
+            else:
+                print()
+                print_bar()
+                print_line("Please Enter Valid Choice")
+                print_bar()
+                print()
+        except Exception:
+            print()
+            print_bar()
+            print_line("Exception Found During User Input ...")
+            print_bar()
+            print()
+
 
 # Main
 
